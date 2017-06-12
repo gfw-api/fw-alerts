@@ -1,0 +1,10 @@
+test:
+  extends:
+    file: base.yml
+    service: base
+  container_name: fw-alerts-test
+  environment:
+    NODE_ENV: test
+    CT_URL: http://mymachine:9000
+    API_VERSION: v1
+  command: test

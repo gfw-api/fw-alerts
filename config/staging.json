@@ -1,0 +1,8 @@
+{
+    "logger": {
+        "name": "fw-alerts",
+        "level": "debug",
+        "toFile": false,
+        "dirLogFile": null
+    }
+}

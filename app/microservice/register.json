@@ -1,0 +1,11 @@
+{
+	"name": "fw-alerts",
+	"endpoints": [{
+		"path": "/v1/fw-alerts/:dataset/:geostore",
+		"method": "GET",
+		"redirect": {
+			"method": "GET",
+			"path": "/api/v1/fw-alerts/:dataset/:geostore"
+		}
+	}]
+}
