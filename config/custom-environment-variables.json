@@ -1,5 +1,8 @@
 {
     "service": {
         "port": "PORT"
-    }
+    },
+    "gladDataset": "GLAD_DATASET",
+    "viirsDataset": "VIIRS_DATASET",
+    "viirsDatasetTableName": "VIIRS_DATASET_TABLENAME"
 }
