@@ -60,13 +60,14 @@ class AreaService {
         const query = `select * from ${table} where acq_date > '${dateFilter}' and st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
 
         let uri = `/query/${viirsDataset}?sql=${query}`;
+        logger.info(`Requesting viirs alerts with query ${uri}`);
         try {
             const result = await ctRegisterMicroservice.requestToMicroservice({
                 uri,
                 method: 'GET',
                 json: true
             });
-            return AreaService.parseViirsAlerts(results.data);
+            return AreaService.parseViirsAlerts(result.data);
         } catch (err) {
             logger.error(err);
             return null;
@@ -88,6 +89,7 @@ class AreaService {
         const query = `select * from data where year >= ${dateFilter.year} and julian_day >= ${dateFilter.day}
             AND st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
         const uri = `/query/${gladDataset}?sql=${query}`;
+        logger.info(`Requesting glad alerts with query ${uri}`);
         try {
             const result = await ctRegisterMicroservice.requestToMicroservice({
                 uri,
@@ -95,7 +97,7 @@ class AreaService {
                 json: true
             });
 
-            return AreaService.parseGladAlerts(results.data);
+            return AreaService.parseGladAlerts(result.data);
         } catch (err) {
             logger.error(err);
             return null;

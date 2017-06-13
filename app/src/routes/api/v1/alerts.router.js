@@ -13,7 +13,7 @@ class AlertsRouter {
     static async getAlertsByGeostore(ctx) {
         logger.debug('Getting alerts by geostore');
         const dataset = ctx.params.dataset;
-        const range = ctx.query.range || null;
+        const range = ctx.query.range;
         const geostore = await GeostoreService.getGeostoreById(ctx.params.geostore);
         if (geostore) {
             const geojson = geostore && geostore.attributes.geojson;
