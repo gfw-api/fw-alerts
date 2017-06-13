@@ -37,7 +37,8 @@ class AreaService {
             const alertGeohash = geohash.encode(alert.lat, alert.long, 8);
             if (!alertsIncluded[alertGeohash]) {
                 alertsIncluded[alertGeohash] = true;
-                const date = moment(alert.year).add(alert.julian_day, 'days');
+                const year = alert.year.toString();
+                const date = moment(year).add(alert.julian_day, 'days');
                 alertsGrouped.push({
                     lat: alert.lat,
                     lon: alert.long,
