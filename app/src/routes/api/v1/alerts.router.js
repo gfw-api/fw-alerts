@@ -13,17 +13,17 @@ class AlertsRouter {
     static async getAlertsByGeostore(ctx) {
         logger.debug('Getting alerts by geostore');
         const dataset = ctx.params.dataset;
-        const range = ctx.query.range;
+        const range = ctx.query.range || null;
         const geostore = await GeostoreService.getGeostoreById(ctx.params.geostore);
         if (geostore) {
             const geojson = geostore && geostore.attributes.geojson;
             let alerts = [];
             if (dataset === config.get('viirsDatasetSlug')) {
                 logger.debug('Requesting viirs alerts');
-                alerts = await AlertsService.getViirsByGeojson(geojson)
+                alerts = await AlertsService.getViirsByGeojson(geojson, range)
             } else if (dataset === config.get('gladDatasetSlug')) {
                 logger.debug('Requesting glad alerts');
-                alerts = await AlertsService.getGladByGeojson(geojson)
+                alerts = await AlertsService.getGladByGeojson(geojson, range)
             } else {
                 ctx.body = ErrorSerializer.serializeError(400, 'Dataset not supported');
                 ctx.status = 400;

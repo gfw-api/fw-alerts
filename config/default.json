@@ -12,5 +12,6 @@
     "gladDatasetSlug": "umd_as_it_happens",
     "viirsDatasetSlug": "viirs",
     "gladDataset": "e663eb09-04de-4f39-b871-35c6c2ed10b5",
-    "viirsDataset": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"
+    "viirsDataset": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
+    "viirsDatasetTableName": "vnp14imgtdl_nrt_global_7d"
 }
