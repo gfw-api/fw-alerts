@@ -67,7 +67,7 @@ class AreaService {
                 method: 'GET',
                 json: true
             });
-            return AreaService.parseViirsAlerts(results.data);
+            return AreaService.parseViirsAlerts(result.data);
         } catch (err) {
             logger.error(err);
             return null;
@@ -97,7 +97,7 @@ class AreaService {
                 json: true
             });
 
-            return AreaService.parseGladAlerts(results.data);
+            return AreaService.parseGladAlerts(result.data);
         } catch (err) {
             logger.error(err);
             return null;
