@@ -57,7 +57,7 @@ class AreaService {
 
         const firstDay = moment().subtract(range, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
-        const query = `select * from ${table} where acq_date > '${dateFilter}' and st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
+        const query = `select latitude, longitude, acq_date from ${table} where acq_date > '${dateFilter}' and st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
 
         let uri = `/query/${viirsDataset}?sql=${query}`;
         logger.info(`Requesting viirs alerts with query ${uri}`);
@@ -86,7 +86,7 @@ class AreaService {
             day:  firstDay.diff(startYearDate, 'days')
         }
 
-        const query = `select * from data where year >= ${dateFilter.year} and julian_day >= ${dateFilter.day}
+        const query = `select lat, long, julian_day, year from data where year >= ${dateFilter.year} and julian_day >= ${dateFilter.day}
             AND st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
         const uri = `/query/${gladDataset}?sql=${query}`;
         logger.info(`Requesting glad alerts with query ${uri}`);
