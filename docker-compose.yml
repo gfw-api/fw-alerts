@@ -1,7 +1,7 @@
 prod:
   image: vizzuality/fw-alerts:1.0.0${STAGING}
   ports:
-    - "3005"
+    - "4200"
   env_file:
     - prod.env
   command: start
