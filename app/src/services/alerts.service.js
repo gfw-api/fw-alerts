@@ -10,7 +10,8 @@ class AreaService {
     static parseViirsAlerts(alerts) {
         if (!alerts || !alerts.length) return [];
 
-        logger.debug('Grouping viirs alerts by geohash precision 8');
+        logger.debug('Number of viirs alerts before grouping', alerts.length);
+        logger.debug('Grouping viirs alerts by geohash precision 8', alerts);
         const alertsGrouped = [];
         const alertsIncluded = {};
         alerts.forEach(function(alert) {
@@ -25,12 +26,15 @@ class AreaService {
             }
             // TODO: update the date when it was already added
         }, this);
+        logger.debug('Number of viirs alerts after grouping', alertsGrouped.length);
+        logger.debug('Grouped viirs alerts by geohash precision 8', alertsGrouped);
         return alertsGrouped;
     }
     static parseGladAlerts(alerts) {
         if (!alerts || !alerts.length) return [];
 
-        logger.debug('Grouping glad alerts by geohash precision 8');
+        logger.debug('Number of glad alerts before grouping', alerts.length);
+        logger.debug('Grouping glad alerts by geohash precision 8', alerts);
         const alertsGrouped = [];
         const alertsIncluded = {};
         alerts.forEach(function(alert) {
@@ -47,6 +51,8 @@ class AreaService {
             }
             // TODO: update the date when it was already added
         }, this);
+        logger.debug('Number of glad alerts after grouping', alertsGrouped.length);
+        logger.debug('Grouped glad alerts by geohash precision 8', alertsGrouped);
         return alertsGrouped;
     }
 
@@ -68,7 +74,7 @@ class AreaService {
                 method: 'GET',
                 json: true
             });
-            logger.info(`Parsing viirs alerts result ${result}`);
+            logger.info('Got viirs alerts', result);
             return AreaService.parseViirsAlerts(result.data);
         } catch (err) {
             logger.error(err);
@@ -83,12 +89,36 @@ class AreaService {
 
         const firstDay = moment().subtract(range, 'months');
         const startYearDate = moment().subtract(range, 'months').startOf('year');
-        const dateFilter = {
+        const dateFromFilter = {
             year: firstDay.year(),
             day:  firstDay.diff(startYearDate, 'days')
         }
+        const dateCurrentFilter = {
+            year: moment().year(),
+            day: moment().diff(moment().startOf('year'), 'days')
+        }
 
-        const query = `select lat, long, julian_day, year from data where year >= ${dateFilter.year} and julian_day >= ${dateFilter.day}
+        let dateQuery = '';
+        if (dateFromFilter.year === dateCurrentFilter.year) {
+            dateQuery += ` year = ${dateFromFilter.year} and julian_day >= ${dateFromFilter.day}`;
+        } else {
+            dateQuery += ' (';
+            for (let i = dateFromFilter.year; i <= dateCurrentFilter.year; i++) {
+                if (i > dateFromFilter.year){
+                    dateQuery +=' or ';
+                }
+                if (i === dateFromFilter.year) {
+                    dateQuery += `(year = '${i}' and julian_day >= ${dateFromFilter.day})`;
+                } else if(i === dateCurrentFilter.day) {
+                    dateQuery += `(year = '${i}' and julian_day <= ${dateCurrentFilter.day})`;
+                } else {
+                    dateQuery += `(year = '${i}')`;
+                }
+            }
+            dateQuery += ')';
+        }
+
+        const query = `select lat, long, julian_day, year from data where ${dateQuery}
             AND st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
         const uri = `/query/${gladDataset}?sql=${query}`;
         logger.info(`Requesting glad alerts with query ${uri}`);
@@ -99,7 +129,7 @@ class AreaService {
                 json: true
             });
 
-            logger.info(`Parsing glad alerts result ${result}`);
+            logger.info('Got glad alerts', result);
             return AreaService.parseGladAlerts(result.data);
         } catch (err) {
             logger.error(err);
