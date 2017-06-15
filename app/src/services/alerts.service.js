@@ -42,7 +42,7 @@ class AreaService {
             if (!alertsIncluded[alertGeohash]) {
                 alertsIncluded[alertGeohash] = true;
                 const year = alert.year.toString();
-                const date = moment(year).add(alert.julian_day, 'days');
+                const date = moment(year, 'YYYY').add(alert.julian_day, 'days');
                 alertsGrouped.push({
                     lat: alert.lat,
                     lon: alert.long,
