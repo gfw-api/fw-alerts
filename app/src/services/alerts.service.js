@@ -77,8 +77,9 @@ class AreaService {
             logger.info('Got viirs alerts', result);
             return AreaService.parseViirsAlerts(result.data);
         } catch (err) {
-            logger.error(err);
-            return null;
+            const statusCode = err.statusCode || 500;
+            ctx.body = ErrorSerializer.serializeError(statusCode, err.message);
+            ctx.status = statusCode;
         }
     }
 
@@ -118,8 +119,7 @@ class AreaService {
             dateQuery += ')';
         }
 
-        const query = `select lat, long, julian_day, year from data where ${dateQuery}
-            AND st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
+        const query = `select lat, long, julian_day, year from data where ${dateQuery} AND st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
         const uri = `/query/${gladDataset}?sql=${query}`;
         logger.info(`Requesting glad alerts with query ${uri}`);
         try {
@@ -133,7 +133,9 @@ class AreaService {
             return AreaService.parseGladAlerts(result.data);
         } catch (err) {
             logger.error(err);
-            return null;
+            const statusCode = err.statusCode || 500;
+            ctx.body = ErrorSerializer.serializeError(statusCode, err.message);
+            ctx.status = statusCode;
         }
     }
 }
