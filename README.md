@@ -38,6 +38,9 @@ It is necessary to define these environment variables:
 
 ### Endpoints availables
 * /:datasetSlug/:geostoreId Get the alerts grouped by geohash precision 8 for GLAD or VIIRS
-It accepts a `range` query param with the following values:
-GLAD: 1-6 last months (6 by default)
-VIIRS: 1-7 last days (7 by default)
+
+#### Query params
+* `range` with the following values:
+    * GLAD: 1-6 last months (6 by default)
+    * VIIRS: 1-7 last days (7 by default)
+* `format` csv by default but also allowed json format
