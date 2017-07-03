@@ -43,4 +43,4 @@ It is necessary to define these environment variables:
 * `range` with the following values:
     * GLAD: 1-6 last months (6 by default)
     * VIIRS: 1-7 last days (7 by default)
-* `format` csv by default but also allowed json format
+* `format` json by default but also allowed csv format

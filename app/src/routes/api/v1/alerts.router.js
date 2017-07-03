@@ -16,7 +16,7 @@ class AlertsRouter {
         const dataset = ctx.params.dataset;
         const range = ctx.query.range;
         const geostore = await GeostoreService.getGeostoreById(ctx.params.geostore);
-        const format = ctx.query.format || 'csv';
+        const format = ctx.query.format || 'json';
 
         if (geostore) {
             const geojson = geostore && geostore.attributes.geojson;
