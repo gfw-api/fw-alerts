@@ -2,6 +2,7 @@ const logger = require('logger');
 const Router = require('koa-router');
 const GeostoreService = require('services/geostore.service');
 const ConverterService = require('services/converter.service')
+const AlertsValidator = require('validators/alerts.validator');
 const AlertsService = require('services/alerts.service');
 const ErrorSerializer = require('serializers/error.serializer');
 const config = require('config');
@@ -27,9 +28,6 @@ class AlertsRouter {
             } else if (dataset === config.get('gladDatasetSlug')) {
                 logger.debug('Requesting glad alerts');
                 alerts = await AlertsService.getGladByGeojson(geojson, range)
-            } else {
-                ctx.body = ErrorSerializer.serializeError(400, 'Dataset not supported');
-                ctx.status = 400;
             }
             if (format === 'csv') {
                 ctx.set('Content-type', 'text/csv');
@@ -54,6 +52,6 @@ class AlertsRouter {
 
 }
 
-router.get('/:dataset/:geostore', AlertsRouter.getAlertsByGeostore);
+router.get('/:dataset/:geostore', AlertsValidator.get, AlertsRouter.getAlertsByGeostore);
 
 module.exports = router;

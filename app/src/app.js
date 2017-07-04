@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const logger = require('logger');
 const koaLogger = require('koa-logger');
+const validate = require('koa-validate');
 const config = require('config');
 const loader = require('loader');
 const convert = require('koa-convert');
@@ -15,6 +16,7 @@ const koaBody = require('koa-body')({
 });
 
 const app = new Koa();
+validate(app);
 
 app.use(convert(koaBody));
 
