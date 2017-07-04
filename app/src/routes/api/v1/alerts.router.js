@@ -17,7 +17,7 @@ class AlertsRouter {
         const dataset = ctx.params.dataset;
         const range = ctx.query.range;
         const geostore = await GeostoreService.getGeostoreById(ctx.params.geostore);
-        const format = ctx.query.format || 'json';
+        const output = ctx.query.output || 'json';
 
         if (geostore) {
             const geojson = geostore && geostore.attributes.geojson;
@@ -29,9 +29,11 @@ class AlertsRouter {
                 logger.debug('Requesting glad alerts');
                 alerts = await AlertsService.getGladByGeojson(geojson, range)
             }
-            if (format === 'csv') {
+            logger.debug('Parsing data with output', output);
+            if (output === 'csv') {
                 ctx.set('Content-type', 'text/csv');
                 ctx.statusCode = 200;
+                logger.debug('Return csv data');
                 if (alerts && alerts.length) {
                     const fields = ['lat', 'lon', 'date'];
                     ctx.body = ConverterService.json2csv(alerts, fields);
@@ -40,6 +42,7 @@ class AlertsRouter {
                 }
             } else {
                 // this is not being serialized as we need to minimify the size of the json
+                logger.debug('Return json data');
                 ctx.body = {
                     data: alerts
                 }

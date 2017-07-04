@@ -14,10 +14,10 @@ class AlertsValidator {
 
     static async get(ctx, next) {
         logger.debug('Validating params to get alerts');
-        ctx.checkParams('dataset').check(format => AlertsValidator.isValidDataset(format), 'Dataset not supported');
+        ctx.checkParams('dataset').check(dataset => AlertsValidator.isValidDataset(dataset), 'Dataset not supported');
         ctx.checkParams('geostore').len(32);
         ctx.checkQuery('range').optional().isInt();
-        ctx.checkQuery('format').optional().check(format => AlertsValidator.isValidFormat(format), 'Format has to be json or csv');
+        ctx.checkQuery('output').optional().check(output => AlertsValidator.isValidFormat(output), 'Format has to be json or csv');
 
         if (ctx.errors) {
             ctx.body = ErrorSerializer.serializeValidationBodyErrors(ctx.errors);
