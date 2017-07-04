@@ -12,7 +12,7 @@ class AlertsValidator {
         return property === 'csv' || property === 'json';
     }
 
-    static get(ctx, next) {
+    static async get(ctx, next) {
         logger.debug('Validating params to get alerts');
         ctx.checkParams('dataset').check(format => AlertsValidator.isValidDataset(format), 'Dataset not supported');
         ctx.checkParams('geostore').len(32);
@@ -24,7 +24,7 @@ class AlertsValidator {
             ctx.status = 400;
             return;
         }
-        next();
+        await next();
     }
 }
 
