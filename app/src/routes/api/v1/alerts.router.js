@@ -22,12 +22,19 @@ class AlertsRouter {
         if (geostore) {
             const geojson = geostore && geostore.attributes.geojson;
             let alerts = [];
-            if (dataset === config.get('viirsDatasetSlug')) {
-                logger.debug('Requesting viirs alerts');
-                alerts = await AlertsService.getViirsByGeojson(geojson, range)
-            } else if (dataset === config.get('gladDatasetSlug')) {
-                logger.debug('Requesting glad alerts');
-                alerts = await AlertsService.getGladByGeojson(geojson, range)
+            try {
+                if (dataset === config.get('viirsDatasetSlug')) {
+                    logger.debug('Requesting viirs alerts');
+                    alerts = await AlertsService.getViirsByGeojson(geojson, range)
+                } else if (dataset === config.get('gladDatasetSlug')) {
+                    logger.debug('Requesting glad alerts');
+                    alerts = await AlertsService.getGladByGeojson(geojson, range)
+                }
+            } catch(err) {
+                logger.error(err);
+                const statusCode = err.statusCode || 500;
+                ctx.body = ErrorSerializer.serializeError(statusCode, err.message);
+                ctx.status = statusCode;
             }
             logger.debug('Parsing data with output', output);
             if (output === 'csv') {

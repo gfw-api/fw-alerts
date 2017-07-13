@@ -77,9 +77,7 @@ class AreaService {
             logger.info('Got viirs alerts', result);
             return AreaService.parseViirsAlerts(result.data);
         } catch (err) {
-            const statusCode = err.statusCode || 500;
-            ctx.body = ErrorSerializer.serializeError(statusCode, err.message);
-            ctx.status = statusCode;
+            throw new Error(err);
         }
     }
 
@@ -132,10 +130,7 @@ class AreaService {
             logger.info('Got glad alerts', result);
             return AreaService.parseGladAlerts(result.data);
         } catch (err) {
-            logger.error(err);
-            const statusCode = err.statusCode || 500;
-            ctx.body = ErrorSerializer.serializeError(statusCode, err.message);
-            ctx.status = statusCode;
+            throw new Error(err);
         }
     }
 }
