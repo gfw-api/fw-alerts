@@ -56,17 +56,16 @@ class AreaService {
         return alertsGrouped;
     }
 
-    static async getViirsByGeojson(geojson, range = 7) {
+    static async getViirsByGeostore(geostore, range = 7) {
         logger.debug(`Obtaining data of viirs with last ${range} days`);
-        const areaGeometry = geojson.features[0].geometry;
         const viirsDataset = config.get('viirsDataset');
         const table = config.get('viirsDatasetTableName');
 
         const firstDay = moment().subtract(range, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
-        const query = `select latitude, longitude, acq_date from ${table} where acq_date > '${dateFilter}' and st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
+        const query = `select latitude, longitude, acq_date from ${table} where acq_date > '${dateFilter}'`;
 
-        let uri = `/query/${viirsDataset}?sql=${query}`;
+        let uri = `/query/${viirsDataset}?sql=${query}&geostore=${geostore}`;
         logger.info(`Requesting viirs alerts with query ${uri}`);
         try {
             const result = await ctRegisterMicroservice.requestToMicroservice({
@@ -81,9 +80,8 @@ class AreaService {
         }
     }
 
-    static async getGladByGeojson(geojson, range = 6) {
+    static async getGladByGeostore(geostore, range = 6) {
         logger.debug(`Obtaining data of glad with last ${range} months`);
-        const areaGeometry = geojson.features[0].geometry;
         const gladDataset = config.get('gladDataset');
 
         const firstDay = moment().subtract(range, 'months');
@@ -117,8 +115,8 @@ class AreaService {
             dateQuery += ')';
         }
 
-        const query = `select lat, long, julian_day, year from data where ${dateQuery} AND st_intersects(st_setsrid(st_geomfromgeojson('${JSON.stringify(areaGeometry)}'), 4326), the_geom)`;
-        const uri = `/query/${gladDataset}?sql=${query}`;
+        const query = `select lat, long, julian_day, year from data where ${dateQuery}`;
+        const uri = `/query/${gladDataset}?sql=${query}&geostore=${geostore}`;
         logger.info(`Requesting glad alerts with query ${uri}`);
         try {
             const result = await ctRegisterMicroservice.requestToMicroservice({

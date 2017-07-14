@@ -1,6 +1,5 @@
 const logger = require('logger');
 const Router = require('koa-router');
-const GeostoreService = require('services/geostore.service');
 const ConverterService = require('services/converter.service')
 const AlertsValidator = require('validators/alerts.validator');
 const AlertsService = require('services/alerts.service');
@@ -16,19 +15,18 @@ class AlertsRouter {
         logger.debug('Getting alerts by geostore');
         const dataset = ctx.params.dataset;
         const range = ctx.query.range;
-        const geostore = await GeostoreService.getGeostoreById(ctx.params.geostore);
+        const geostore = ctx.params.geostore;
         const output = ctx.query.output || 'json';
 
         if (geostore) {
-            const geojson = geostore && geostore.attributes.geojson;
             let alerts = [];
             try {
                 if (dataset === config.get('viirsDatasetSlug')) {
                     logger.debug('Requesting viirs alerts');
-                    alerts = await AlertsService.getViirsByGeojson(geojson, range)
+                    alerts = await AlertsService.getViirsByGeostore(geostore, range)
                 } else if (dataset === config.get('gladDatasetSlug')) {
                     logger.debug('Requesting glad alerts');
-                    alerts = await AlertsService.getGladByGeojson(geojson, range)
+                    alerts = await AlertsService.getGladByGeostore(geostore, range)
                 }
             } catch(err) {
                 logger.error(err);
