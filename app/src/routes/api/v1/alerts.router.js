@@ -15,6 +15,7 @@ class AlertsRouter {
         logger.debug('Getting alerts by geostore');
         const dataset = ctx.params.dataset;
         const range = ctx.query.range;
+        const geohashPrecision = ctx.query.precision;
         const geostore = ctx.params.geostore;
         const output = ctx.query.output || 'json';
 
@@ -23,10 +24,10 @@ class AlertsRouter {
             try {
                 if (dataset === config.get('viirsDatasetSlug')) {
                     logger.debug('Requesting viirs alerts');
-                    alerts = await AlertsService.getViirsByGeostore(geostore, range)
+                    alerts = await AlertsService.getViirsByGeostore(geostore, range, geohashPrecision)
                 } else if (dataset === config.get('gladDatasetSlug')) {
                     logger.debug('Requesting glad alerts');
-                    alerts = await AlertsService.getGladByGeostore(geostore, range)
+                    alerts = await AlertsService.getGladByGeostore(geostore, range, geohashPrecision)
                 }
             } catch(err) {
                 logger.error(err);

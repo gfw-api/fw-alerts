@@ -40,7 +40,8 @@ It is necessary to define these environment variables:
 * /:datasetSlug/:geostoreId Get the alerts grouped by geohash precision 8 for GLAD or VIIRS
 
 #### Query params
-* `range` with the following values:
-    * GLAD: 1-6 last months (6 by default)
-    * VIIRS: 1-7 last days (7 by default)
+* `days` from now with the following default values:
+    * GLAD: 365 (last year)
+    * VIIRS: 7 (last data available)
 * `output` json by default but also allowed csv format
+* `precision` geohash precision to group by

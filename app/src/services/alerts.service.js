@@ -7,15 +7,15 @@ const moment = require("moment");
 
 
 class AreaService {
-    static parseViirsAlerts(alerts) {
+    static parseViirsAlerts(alerts, geohashPrecision) {
         if (!alerts || !alerts.length) return [];
 
         logger.debug('Number of viirs alerts before grouping', alerts.length);
-        logger.debug('Grouping viirs alerts by geohash precision 8', alerts);
+        logger.debug(`Grouping viirs alerts by geohash precision ${geohashPrecision}`);
         const alertsGrouped = [];
         const alertsIncluded = {};
         alerts.forEach(function(alert) {
-            const alertGeohash = geohash.encode(alert.latitude, alert.longitude, 8);
+            const alertGeohash = geohash.encode(alert.latitude, alert.longitude, geohashPrecision);
             if (!alertsIncluded[alertGeohash]) {
                 alertsIncluded[alertGeohash] = true;
                 alertsGrouped.push({
@@ -27,18 +27,17 @@ class AreaService {
             // TODO: update the date when it was already added
         }, this);
         logger.debug('Number of viirs alerts after grouping', alertsGrouped.length);
-        logger.debug('Grouped viirs alerts by geohash precision 8', alertsGrouped);
         return alertsGrouped;
     }
-    static parseGladAlerts(alerts) {
+    static parseGladAlerts(alerts, geohashPrecision) {
         if (!alerts || !alerts.length) return [];
 
         logger.debug('Number of glad alerts before grouping', alerts.length);
-        logger.debug('Grouping glad alerts by geohash precision 8', alerts);
+        logger.debug(`Grouping glad alerts by geohash precision ${geohashPrecision}`);
         const alertsGrouped = [];
         const alertsIncluded = {};
         alerts.forEach(function(alert) {
-            const alertGeohash = geohash.encode(alert.lat, alert.long, 8);
+            const alertGeohash = geohash.encode(alert.lat, alert.long, geohashPrecision);
             if (!alertsIncluded[alertGeohash]) {
                 alertsIncluded[alertGeohash] = true;
                 const year = alert.year.toString();
@@ -52,11 +51,10 @@ class AreaService {
             // TODO: update the date when it was already added
         }, this);
         logger.debug('Number of glad alerts after grouping', alertsGrouped.length);
-        logger.debug('Grouped glad alerts by geohash precision 8', alertsGrouped);
         return alertsGrouped;
     }
 
-    static async getViirsByGeostore(geostore, range = 7) {
+    static async getViirsByGeostore(geostore, range = 7, geohashPrecision = 8) {
         logger.debug(`Obtaining data of viirs with last ${range} days`);
         const viirsDataset = config.get('viirsDataset');
         const table = config.get('viirsDatasetTableName');
@@ -74,18 +72,18 @@ class AreaService {
                 json: true
             });
             logger.info('Got viirs alerts', result);
-            return AreaService.parseViirsAlerts(result.data);
+            return AreaService.parseViirsAlerts(result.data, geohashPrecision);
         } catch (err) {
             throw new Error(err);
         }
     }
 
-    static async getGladByGeostore(geostore, range = 6) {
-        logger.debug(`Obtaining data of glad with last ${range} months`);
+    static async getGladByGeostore(geostore, range = 365, geohashPrecision = 8) {
+        logger.debug(`Obtaining data of glad with last ${range} days`);
         const gladDataset = config.get('gladDataset');
 
-        const firstDay = moment().subtract(range, 'months');
-        const startYearDate = moment().subtract(range, 'months').startOf('year');
+        const firstDay = moment().subtract(range, 'days');
+        const startYearDate = moment().subtract(range, 'days').startOf('year');
         const dateFromFilter = {
             year: firstDay.year(),
             day:  firstDay.diff(startYearDate, 'days')
@@ -117,6 +115,7 @@ class AreaService {
 
         const query = `select lat, long, julian_day, year from data where ${dateQuery}`;
         const uri = `/query/${gladDataset}?sql=${query}&geostore=${geostore}`;
+        // const url = 'https://production-api.globalforestwatch.org/v1' + uri;
         logger.info(`Requesting glad alerts with query ${uri}`);
         try {
             const result = await ctRegisterMicroservice.requestToMicroservice({
@@ -124,9 +123,10 @@ class AreaService {
                 method: 'GET',
                 json: true
             });
+            // const result = await rp({ uri: url, json: true });
 
-            logger.info('Got glad alerts', result);
-            return AreaService.parseGladAlerts(result.data);
+            logger.info('Got glad alerts', result.data.length);
+            return AreaService.parseGladAlerts(result.data, geohashPrecision);
         } catch (err) {
             throw new Error(err);
         }
