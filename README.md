@@ -41,7 +41,7 @@ It is necessary to define these environment variables:
 
 #### Query params
 * `days` from now with the following default values:
-    * GLAD: 183 (6 months)
+    * GLAD: 365 (last year)
     * VIIRS: 7 (last data available)
 * `output` json by default but also allowed csv format
 * `precision` geohash precision to group by
