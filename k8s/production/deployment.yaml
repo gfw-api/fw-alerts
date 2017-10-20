@@ -54,7 +54,7 @@ spec:
                   name: mssecrets
                   key: API_VERSION
           - name: GLAD_DATASET
-            value: e663eb09-04de-4f39-b871-35c6c2ed10b5
+            value: db34c2d9-77b8-43ee-b101-f499e39d1597
           - name: VIIRS_DATASET
             value: 20cc5eca-8c63-4c41-8e8e-134dcf1e6d76
           - name: VIIRS_DATASET_TABLENAME
