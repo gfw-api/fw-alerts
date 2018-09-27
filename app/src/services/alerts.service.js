@@ -90,10 +90,11 @@ class AreaService {
         try {
             const result = await ctRegisterMicroservice.requestToMicroservice({
                 uri,
-                method: 'GET'
+                method: 'GET',
+                json: true
             });
 
-            return AreaService.parseGladAlerts(JSON.parse(result).data, geohashPrecision);
+            return AreaService.parseGladAlerts(result.data, geohashPrecision);
         } catch (err) {
             throw new Error(err);
         }
