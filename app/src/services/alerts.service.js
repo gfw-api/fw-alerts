@@ -93,7 +93,7 @@ class AreaService {
                 method: 'GET',
                 json: true
             });
-
+            logger.info('Got glad alerts', result.data.length);
             return AreaService.parseGladAlerts(result.data, geohashPrecision);
         } catch (err) {
             throw new Error(err);
