@@ -80,42 +80,12 @@ class AreaService {
 
     static async getGladByGeostore(geostore, range = 365, geohashPrecision = 8) {
         logger.debug(`Obtaining data of glad with last ${range} days`);
-        const gladDataset = config.get('gladDataset');
 
         const firstDay = moment().subtract(range, 'days');
-        const startYearDate = moment().subtract(range, 'days').startOf('year');
-        const dateFromFilter = {
-            year: firstDay.year(),
-            day:  firstDay.diff(startYearDate, 'days')
-        }
-        const dateCurrentFilter = {
-            year: moment().year(),
-            day: moment().diff(moment().startOf('year'), 'days')
-        }
+        const period = `${firstDay.format('YYYY-MM-DD')},${moment().format('YYYY-MM-DD')}`
 
-        let dateQuery = '';
-        if (dateFromFilter.year === dateCurrentFilter.year) {
-            dateQuery += ` year = ${dateFromFilter.year} and julian_day >= ${dateFromFilter.day}`;
-        } else {
-            dateQuery += ' (';
-            for (let i = dateFromFilter.year; i <= dateCurrentFilter.year; i++) {
-                if (i > dateFromFilter.year){
-                    dateQuery +=' or ';
-                }
-                if (i === dateFromFilter.year) {
-                    dateQuery += `(year = '${i}' and julian_day >= ${dateFromFilter.day})`;
-                } else if(i === dateCurrentFilter.day) {
-                    dateQuery += `(year = '${i}' and julian_day <= ${dateCurrentFilter.day})`;
-                } else {
-                    dateQuery += `(year = '${i}')`;
-                }
-            }
-            dateQuery += ')';
-        }
+        const uri = `/glad-alerts/download?period=${period}&geostore=${geostore}&format=json`;
 
-        const query = `select lat, long, julian_day, year from data where ${dateQuery}`;
-        const uri = `/query/${gladDataset}?sql=${query}&geostore=${geostore}`;
-        // const url = 'https://production-api.globalforestwatch.org/v1' + uri;
         logger.info(`Requesting glad alerts with query ${uri}`);
         try {
             const result = await ctRegisterMicroservice.requestToMicroservice({
@@ -123,8 +93,6 @@ class AreaService {
                 method: 'GET',
                 json: true
             });
-            // const result = await rp({ uri: url, json: true });
-
             logger.info('Got glad alerts', result.data.length);
             return AreaService.parseGladAlerts(result.data, geohashPrecision);
         } catch (err) {
