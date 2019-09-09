@@ -7,54 +7,46 @@ const moment = require("moment");
 
 
 class AreaService {
-    static parseViirsAlerts(alerts, geohashPrecision) {
+    static parseViirsAlerts(alerts) {
         if (!alerts || !alerts.length) return [];
 
-        logger.debug('Number of viirs alerts before grouping', alerts.length);
-        logger.debug(`Grouping viirs alerts by geohash precision ${geohashPrecision}`);
-        const alertsGrouped = [];
-        const alertsIncluded = {};
-        alerts.forEach(function(alert) {
-            const alertGeohash = geohash.encode(alert.latitude, alert.longitude, geohashPrecision);
-            if (!alertsIncluded[alertGeohash]) {
-                alertsIncluded[alertGeohash] = true;
-                alertsGrouped.push({
-                    lat: alert.latitude,
-                    lon: alert.longitude,
-                    date: moment(alert.acq_date).valueOf()
-                })
-            }
+        logger.debug('Number of viirs alerts before parsing', alerts.length);
+        const alertsParsed = [];
+        alerts.forEach(function (alert) {
+            alertsParsed.push({
+                lat: alert.latitude,
+                lon: alert.longitude,
+                date: moment(alert.acq_date).valueOf()
+            })
             // TODO: update the date when it was already added
         }, this);
-        logger.debug('Number of viirs alerts after grouping', alertsGrouped.length);
-        return alertsGrouped;
+        logger.debug('Number of viirs alerts after parsing', alertsParsed.length);
+        return alertsParsed;
     }
-    static parseGladAlerts(alerts, geohashPrecision) {
+
+    static parseGladAlerts(alerts) {
         if (!alerts || !alerts.length) return [];
 
-        logger.debug('Number of glad alerts before grouping', alerts.length);
-        logger.debug(`Grouping glad alerts by geohash precision ${geohashPrecision}`);
-        const alertsGrouped = [];
-        const alertsIncluded = {};
-        alerts.forEach(function(alert) {
-            const alertGeohash = geohash.encode(alert.lat, alert.long, geohashPrecision);
-            if (!alertsIncluded[alertGeohash]) {
-                alertsIncluded[alertGeohash] = true;
-                const year = alert.year.toString();
-                const date = moment(year, 'YYYY').add(alert.julian_day, 'days');
-                alertsGrouped.push({
-                    lat: alert.lat,
-                    lon: alert.long,
-                    date: date.valueOf()
-                })
-            }
+        logger.debug('Number of glad alerts before parsing', alerts.length);
+
+        const alertsParsed = [];
+
+        alerts.forEach(function (alert) {
+
+            const year = alert.year.toString();
+            const date = moment(year, 'YYYY').add(alert.julian_day, 'days');
+            alertsParsed.push({
+                lat: alert.lat,
+                lon: alert.long,
+                date: date.valueOf()
+            })
             // TODO: update the date when it was already added
         }, this);
-        logger.debug('Number of glad alerts after grouping', alertsGrouped.length);
-        return alertsGrouped;
+        logger.debug('Number of glad alerts after parsing', alertsParsed.length);
+        return alertsParsed;
     }
 
-    static async getViirsByGeostore(geostore, range = 7, geohashPrecision = 8) {
+    static async getViirsByGeostore(geostore, range = 7) {
         logger.debug(`Obtaining data of viirs with last ${range} days`);
         const viirsDataset = config.get('viirsDataset');
         const table = config.get('viirsDatasetTableName');
@@ -72,13 +64,13 @@ class AreaService {
                 json: true
             });
             logger.info('Got viirs alerts', result);
-            return AreaService.parseViirsAlerts(result.data, geohashPrecision);
+            return AreaService.parseViirsAlerts(result.data);
         } catch (err) {
             throw new Error(err);
         }
     }
 
-    static async getGladByGeostore(geostore, range = 365, geohashPrecision = 8) {
+    static async getGladByGeostore(geostore, range = 365) {
         logger.debug(`Obtaining data of glad with last ${range} days`);
 
         const firstDay = moment().subtract(range, 'days');
@@ -94,7 +86,7 @@ class AreaService {
                 json: true
             });
             logger.info('Got glad alerts', result.data.length);
-            return AreaService.parseGladAlerts(result.data, geohashPrecision);
+            return AreaService.parseGladAlerts(result.data);
         } catch (err) {
             throw new Error(err);
         }
