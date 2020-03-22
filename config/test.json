@@ -4,5 +4,7 @@
         "level": "debug",
         "toFile": false,
         "dirLogFile": null
-    }
+    },
+    "gladDatasetSlug": "gladDatasetSlug",
+    "viirsDatasetSlug": "viirsDatasetSlug"
 }

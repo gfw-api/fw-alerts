@@ -1,6 +1,6 @@
 const logger = require('logger');
 const Router = require('koa-router');
-const ConverterService = require('services/converter.service')
+const ConverterService = require('services/converter.service');
 const AlertsValidator = require('validators/alerts.validator');
 const AlertsService = require('services/alerts.service');
 const ErrorSerializer = require('serializers/error.serializer');
@@ -11,11 +11,12 @@ const router = new Router({
 });
 
 class AlertsRouter {
+
     static async getAlertsByGeostore(ctx) {
         logger.debug('Getting alerts by geostore');
-        const dataset = ctx.params.dataset;
-        const range = ctx.query.range;
-        const geostore = ctx.params.geostore;
+        const { dataset } = ctx.params;
+        const { range } = ctx.query;
+        const { geostore } = ctx.params;
         const output = ctx.query.output || 'json';
 
         if (geostore) {
@@ -23,12 +24,12 @@ class AlertsRouter {
             try {
                 if (dataset === config.get('viirsDatasetSlug')) {
                     logger.debug('Requesting viirs alerts');
-                    alerts = await AlertsService.getViirsByGeostore(geostore, range)
+                    alerts = await AlertsService.getViirsByGeostore(geostore, range);
                 } else if (dataset === config.get('gladDatasetSlug')) {
                     logger.debug('Requesting glad alerts');
-                    alerts = await AlertsService.getGladByGeostore(geostore, range)
+                    alerts = await AlertsService.getGladByGeostore(geostore, range);
                 }
-            } catch(err) {
+            } catch (err) {
                 logger.error(err);
                 const statusCode = err.statusCode || 500;
                 ctx.body = ErrorSerializer.serializeError(statusCode, err.message);
@@ -50,7 +51,7 @@ class AlertsRouter {
                 logger.debug('Return json data');
                 ctx.body = {
                     data: alerts
-                }
+                };
             }
         } else {
             ctx.body = ErrorSerializer.serializeError(404, 'Geostore not found');
