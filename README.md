@@ -1,5 +1,7 @@
 # FW alerts Microservice
 
+[![Build Status](https://travis-ci.org/gfw-api/fw-alerts.svg?branch=develop)](https://travis-ci.org/gfw-api/fw-alerts)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/40d4b1e823a36f2041a4/test_coverage)](https://codeclimate.com/github/gfw-api/fw-alerts/test_coverage)
 
 Gets the alerts of an area grouped by geohash precision
 
