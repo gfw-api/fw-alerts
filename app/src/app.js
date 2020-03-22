@@ -25,22 +25,27 @@ app.use(koaSimpleHealthCheck());
 app.use(async (ctx, next) => {
     try {
         await next();
-    } catch (err) {
-        let error = err;
+    } catch (inErr) {
+        let error = inErr;
         try {
-            error = JSON.parse(err);
+            error = JSON.parse(inErr);
         } catch (e) {
-            logger.error('Error parse');
+            logger.debug('Could not parse error message - is it JSON?: ', inErr);
+            error = inErr;
         }
-        ctx.status = error.status || 500;
-        logger.error(error);
+        ctx.status = error.status || ctx.status || 500;
+        if (ctx.status >= 500) {
+            logger.error(error);
+        } else {
+            logger.info(error);
+        }
+
         ctx.body = ErrorSerializer.serializeError(ctx.status, error.message);
-        if (process.env.NODE_ENV === 'prod' && this.status === 500) {
+        if (process.env.NODE_ENV === 'prod' && ctx.status === 500) {
             ctx.body = 'Unexpected error';
         }
         ctx.response.type = 'application/vnd.api+json';
     }
-
 });
 
 app.use(koaLogger());
