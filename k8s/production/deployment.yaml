@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   namespace: fw
   labels:
-    name: {name}
-  name: {name}
+    name: fw-alerts
+  name: fw-alerts
 spec:
   revisionHistoryLimit: 2
   template:
@@ -12,7 +12,7 @@ spec:
       annotations:
         chaos.alpha.kubernetes.io/enabled: "true"
       labels:
-        name: {name}
+        name: fw-alerts
     spec:
       tolerations:
       - key: "type"
@@ -29,8 +29,8 @@ spec:
                 values:
                 - gfw
       containers:
-      - name: {name}
-        image: vizzuality/{name}
+      - name: fw-alerts
+        image: vizzuality/fw-alerts
         imagePullPolicy: Always
         resources:
           requests:
@@ -47,7 +47,7 @@ spec:
           - name: NODE_PATH
             value: app/src
           - name: LOCAL_URL
-            value: http://{name}.fw.svc.cluster.local:4200
+            value: http://fw-alerts.fw.svc.cluster.local:4200
           - name: CT_URL
             valueFrom:
                 secretKeyRef:
