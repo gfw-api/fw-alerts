@@ -1,9 +1,0 @@
-base:
-  build: .
-  ports:
-    - "4200:4200"
-  container_name: fw-alerts
-  environment:
-    PORT: 4200
-    NODE_PATH: app/src
-

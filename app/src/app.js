@@ -5,6 +5,7 @@ const validate = require('koa-validate');
 const config = require('config');
 const loader = require('loader');
 const convert = require('koa-convert');
+const koaSimpleHealthCheck = require('koa-simple-healthcheck');
 const ctRegisterMicroservice = require('ct-register-microservice-node');
 const ErrorSerializer = require('serializers/error.serializer');
 
@@ -19,6 +20,7 @@ const app = new Koa();
 validate(app);
 
 app.use(convert(koaBody));
+app.use(koaSimpleHealthCheck());
 
 app.use(async (ctx, next) => {
     try {
