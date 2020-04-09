@@ -9,76 +9,83 @@ spec:
   revisionHistoryLimit: 0
   template:
     metadata:
-      annotations:
-        chaos.alpha.kubernetes.io/enabled: "true"
       labels:
         name: fw-alerts
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - gfw
       containers:
-      - name: fw-alerts
-        image: vizzuality/fw-alerts
-        imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: "0.5"
-            memory: "256M"
-          limits:
-            cpu: "1"
-            memory: "512M"
-        args:
-          - start
-        env:
-          - name: PORT
-            value: "4200"
-          - name: NODE_ENV
-            value: staging
-          - name: NODE_PATH
-            value: app/src
-          - name: LOCAL_URL
-            value: http://fw-alerts.fw.svc.cluster.local:4200
-          - name: CT_URL
-            valueFrom:
+        - name: fw-alerts
+          image: vizzuality/fw-alerts
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "0.5"
+              memory: "256M"
+            limits:
+              cpu: "1"
+              memory: "512M"
+          args:
+            - start
+          env:
+            - name: PORT
+              value: "4200"
+            - name: NODE_ENV
+              value: staging
+            - name: NODE_PATH
+              value: app/src
+            - name: LOCAL_URL
+              value: http://fw-alerts.fw.svc.cluster.local:4200
+            - name: CT_URL
+              valueFrom:
                 secretKeyRef:
                   name: mssecrets
                   key: CT_URL
-          - name: CT_TOKEN
-            valueFrom:
+            - name: CT_TOKEN
+              valueFrom:
                 secretKeyRef:
                   name: mssecrets
                   key: CT_TOKEN
-          - name: CT_REGISTER_MODE
-            valueFrom:
+            - name: CT_REGISTER_MODE
+              valueFrom:
                 secretKeyRef:
                   name: mssecrets
                   key: CT_REGISTER_MODE
-          - name: API_VERSION
-            valueFrom:
+            - name: API_VERSION
+              valueFrom:
                 secretKeyRef:
                   name: mssecrets
                   key: API_VERSION
-          - name: VIIRS_DATASET
-            value: 20cc5eca-8c63-4c41-8e8e-134dcf1e6d76
-          - name: VIIRS_DATASET_TABLENAME
-            value: vnp14imgtdl_nrt_global_7d
+            - name: VIIRS_DATASET
+              value: 20cc5eca-8c63-4c41-8e8e-134dcf1e6d76
+            - name: VIIRS_DATASET_TABLENAME
+              value: vnp14imgtdl_nrt_global_7d
 
-        ports:
-          - containerPort: 4200
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthcheck
-            port: 4200
-          initialDelaySeconds: 30
-          timeoutSeconds: 5
-          periodSeconds: 15
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthcheck
-            port: 4200
-          failureThreshold: 3
-          initialDelaySeconds: 30
-          timeoutSeconds: 5
-          periodSeconds: 15
+          ports:
+            - containerPort: 4200
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthcheck
+              port: 4200
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthcheck
+              port: 4200
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 15
 
       restartPolicy: Always
