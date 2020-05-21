@@ -2,6 +2,5 @@
     "service": {
         "port": "PORT"
     },
-    "viirsDataset": "VIIRS_DATASET",
-    "viirsDatasetTableName": "VIIRS_DATASET_TABLENAME"
+    "viirsDataset": "VIIRS_DATASET"
 }

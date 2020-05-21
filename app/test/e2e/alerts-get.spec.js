@@ -3,6 +3,7 @@ const nock = require('nock');
 const chai = require('chai');
 const config = require('config');
 const moment = require('moment');
+const logger = require('logger');
 
 const { getTestServer } = require('./utils/test-server');
 
@@ -64,15 +65,13 @@ describe('Get alerts tests', () => {
     });
 
     it('Get alerts for the viirs dataset should return a 200 response (happy case)', async () => {
-        const table = config.get('viirsDatasetTableName');
-
         const firstDay = moment().subtract(7, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
 
         nock(process.env.CT_URL)
-            .get('/v1/query/20cc5eca-8c63-4c41-8e8e-134dcf1e6d76')
+            .get('/v1/query/003539d8-b713-4df2-9e31-5eda80353191')
             .query({
-                sql: `select latitude, longitude, acq_date from ${table} where acq_date > '${dateFilter}'`,
+                sql: `select latitude, longitude, alert___date from table where alert___date > '${dateFilter}'`,
                 geostore: 'ddc18d3a0692eea844f687c6d0fd3002'
             })
             .reply(200, {
@@ -80,26 +79,26 @@ describe('Get alerts tests', () => {
                     {
                         latitude: 12.42243,
                         longitude: 21.50799,
-                        acq_date: '2020-03-16T00:00:00Z'
+                        alert__date: '2020-03-16T00:00:00Z'
                     },
                     {
                         latitude: 24.55886,
                         longitude: 117.63361,
-                        acq_date: '2020-03-16T00:00:00Z'
+                        alert__date: '2020-03-16T00:00:00Z'
                     },
                     {
                         latitude: 39.5949,
                         longitude: 112.95085,
-                        acq_date: '2020-03-16T00:00:00Z'
+                        alert__date: '2020-03-16T00:00:00Z'
                     }
                 ],
                 meta: {
                     cloneUrl: {
                         http_method: 'POST',
-                        url: '/dataset/20cc5eca-8c63-4c41-8e8e-134dcf1e6d76/clone',
+                        url: '/dataset/003539d8-b713-4df2-9e31-5eda80353191/clone',
                         body: {
                             dataset: {
-                                datasetUrl: '/query/20cc5eca-8c63-4c41-8e8e-134dcf1e6d76?sql=select%20latitude%2C%20longitude%2C%20acq_date%20from%20vnp14imgtdl_nrt_global_7d%20where%20acq_date%20%3E%20%272020-03-15%27&geostore=ddc18d3a0692eea844f687c6d0fd3002',
+                                datasetUrl: '/query/003539d8-b713-4df2-9e31-5eda80353191?sql=select%20latitude%2C%20longitude%2C%20acq_date%20from%20vnp14imgtdl_nrt_global_7d%20where%20acq_date%20%3E%20%272020-03-15%27&geostore=ddc18d3a0692eea844f687c6d0fd3002',
                                 application: [
                                     'your',
                                     'apps'
