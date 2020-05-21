@@ -15,7 +15,7 @@ class AreaService {
             alertsParsed.push({
                 lat: alert.latitude,
                 lon: alert.longitude,
-                date: moment(alert.acq_date).valueOf()
+                date: moment(alert.alert__date).valueOf()
             });
             // TODO: update the date when it was already added
         }, this);
@@ -48,11 +48,10 @@ class AreaService {
     static async getViirsByGeostore(geostore, range = 7) {
         logger.debug(`Obtaining data of viirs with last ${range} days`);
         const viirsDataset = config.get('viirsDataset');
-        const table = config.get('viirsDatasetTableName');
 
         const firstDay = moment().subtract(range, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
-        const query = `select latitude, longitude, acq_date from ${table} where acq_date > '${dateFilter}'`;
+        const query = `select latitude, longitude, alert___date from table where alert___date > '${dateFilter}'`;
 
         const uri = `/query/${viirsDataset}?sql=${query}&geostore=${geostore}`;
         logger.info(`Requesting viirs alerts with query ${uri}`);
