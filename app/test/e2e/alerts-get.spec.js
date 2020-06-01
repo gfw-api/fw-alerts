@@ -71,7 +71,7 @@ describe('Get alerts tests', () => {
         nock(process.env.CT_URL)
             .get('/v1/query/003539d8-b713-4df2-9e31-5eda80353191')
             .query({
-                sql: `select latitude, longitude, alert___date from table where alert___date > '${dateFilter}'`,
+                sql: `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`,
                 geostore: 'ddc18d3a0692eea844f687c6d0fd3002'
             })
             .reply(200, {

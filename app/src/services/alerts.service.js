@@ -51,7 +51,7 @@ class AreaService {
 
         const firstDay = moment().subtract(range, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
-        const query = `select latitude, longitude, alert___date from table where alert___date > '${dateFilter}'`;
+        const query = `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`;
 
         const uri = `/query/${viirsDataset}?sql=${query}&geostore=${geostore}`;
         logger.info(`Requesting viirs alerts with query ${uri}`);
