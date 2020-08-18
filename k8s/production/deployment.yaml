@@ -64,7 +64,7 @@ spec:
                   name: mssecrets
                   key: API_VERSION
             - name: VIIRS_DATASET
-              value: a2475f80-e48b-455d-b8d1-198bd6b8e91d
+              value: 76642243-d895-48f7-b8e8-5333851bd00f
             - name: VIIRS_DATASET_TABLENAME
               value: vnp14imgtdl_nrt_global_7d
 
