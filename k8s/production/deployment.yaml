@@ -1,12 +1,22 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: fw
   labels:
     name: fw-alerts
   name: fw-alerts
+  namespace: fw
 spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
   revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      name: fw-alerts
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -22,17 +32,7 @@ spec:
                     values:
                       - gfw
       containers:
-        - name: fw-alerts
-          image: vizzuality/fw-alerts
-          imagePullPolicy: Always
-          resources:
-            requests:
-              cpu: "0.25"
-              memory: "256M"
-            limits:
-              cpu: "1"
-              memory: "512M"
-          args:
+        - args:
             - start
           env:
             - name: PORT
@@ -46,46 +46,66 @@ spec:
             - name: CT_URL
               valueFrom:
                 secretKeyRef:
-                  name: mssecrets
                   key: CT_URL
+                  name: mssecrets
             - name: CT_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: mssecrets
                   key: CT_TOKEN
+                  name: mssecrets
             - name: CT_REGISTER_MODE
               valueFrom:
                 secretKeyRef:
-                  name: mssecrets
                   key: CT_REGISTER_MODE
+                  name: mssecrets
             - name: API_VERSION
               valueFrom:
                 secretKeyRef:
-                  name: mssecrets
                   key: API_VERSION
+                  name: mssecrets
             - name: VIIRS_DATASET
-              value: 7af31612-a88a-4910-9b11-88c355b2f7a4
+              value: 76642243-d895-48f7-b8e8-5333851bd00f
             - name: VIIRS_DATASET_TABLENAME
               value: vnp14imgtdl_nrt_global_7d
-
+          image: vizzuality/fw-alerts
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthcheck
+              port: 4200
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: fw-alerts
           ports:
             - containerPort: 4200
+              protocol: TCP
           readinessProbe:
-            httpGet:
-              scheme: HTTP
-              path: /healthcheck
-              port: 4200
-            initialDelaySeconds: 30
-            timeoutSeconds: 5
-            periodSeconds: 15
-          livenessProbe:
-            httpGet:
-              scheme: HTTP
-              path: /healthcheck
-              port: 4200
             failureThreshold: 3
+            httpGet:
+              path: /healthcheck
+              port: 4200
+              scheme: HTTP
             initialDelaySeconds: 30
-            timeoutSeconds: 5
             periodSeconds: 15
-
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512M
+            requests:
+              cpu: 250m
+              memory: 256M
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+        - name: regcred
       restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: { }
+      terminationGracePeriodSeconds: 30
