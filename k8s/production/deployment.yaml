@@ -67,6 +67,23 @@ spec:
               value: 76642243-d895-48f7-b8e8-5333851bd00f
             - name: VIIRS_DATASET_TABLENAME
               value: vnp14imgtdl_nrt_global_7d
+            - name: FASTLY_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_ENABLED
+                  name: mssecrets
+            - name: FASTLY_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_APIKEY
+                  name: mssecrets
+                  optional: true
+            - name: FASTLY_SERVICEID
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_SERVICEID
+                  name: mssecrets
+                  optional: true
           image: vizzuality/fw-alerts
           imagePullPolicy: Always
           livenessProbe:
