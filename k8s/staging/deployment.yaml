@@ -65,6 +65,23 @@ spec:
                   name: mssecrets
             - name: VIIRS_DATASET
               value: 9223ef23-7329-4987-8720-b5a87305f57d
+            - name: FASTLY_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_ENABLED
+                  name: mssecrets
+            - name: FASTLY_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_APIKEY
+                  name: mssecrets
+                  optional: true
+            - name: FASTLY_SERVICEID
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_SERVICEID
+                  name: mssecrets
+                  optional: true
           image: vizzuality/fw-alerts
           imagePullPolicy: Always
           livenessProbe:
