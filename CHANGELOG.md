@@ -1,3 +1,7 @@
+## 14/01/2021
+
+- Replace CT integration library
+
 # 1.1.0
 
 ## 05/21/2020

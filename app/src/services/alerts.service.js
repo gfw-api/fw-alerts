@@ -1,5 +1,5 @@
 const logger = require('logger');
-const ctRegisterMicroservice = require('ct-register-microservice-node');
+const { RWAPIMicroservice } = require('rw-api-microservice-node');
 const config = require('config');
 const moment = require('moment');
 
@@ -56,7 +56,7 @@ class AreaService {
         const uri = `/query/${viirsDataset}?sql=${query}&geostore=${geostore}`;
         logger.info(`Requesting viirs alerts with query ${uri}`);
         try {
-            const result = await ctRegisterMicroservice.requestToMicroservice({
+            const result = await RWAPIMicroservice.requestToMicroservice({
                 uri,
                 method: 'GET',
                 json: true
@@ -78,7 +78,7 @@ class AreaService {
 
         logger.info(`Requesting glad alerts with query ${uri}`);
         try {
-            const result = await ctRegisterMicroservice.requestToMicroservice({
+            const result = await RWAPIMicroservice.requestToMicroservice({
                 uri,
                 method: 'GET',
                 json: true

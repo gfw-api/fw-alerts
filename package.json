@@ -47,7 +47,7 @@
   "dependencies": {
     "bunyan": "^1.8.5",
     "config": "^3.3.0",
-    "ct-register-microservice-node": "^2.1.7",
+    "rw-api-microservice-node": "^3.2.1",
     "json2csv": "^3.7.3",
     "jsonapi-serializer": "2.1.1",
     "koa": "^2.0.0",
