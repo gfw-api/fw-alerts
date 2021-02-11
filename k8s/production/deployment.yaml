@@ -84,7 +84,11 @@ spec:
                   key: FASTLY_SERVICEID
                   name: mssecrets
                   optional: true
+<<<<<<< HEAD
           image: vizzuality/fw-alerts
+=======
+          image: gfwdockerhub/fw-alerts
+>>>>>>> dev
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
