@@ -3,14 +3,14 @@ services:
   develop:
     build: .
     ports:
-      - "4200:4200"
+      - "4201:4201"
     container_name: fw-alerts
     environment:
-      PORT: 4200
+      PORT: 4201
       NODE_PATH: app/src
       CT_REGISTER_MODE: auto
       CT_URL: http://mymachine:9000
-      LOCAL_URL: http://mymachine:4200
+      LOCAL_URL: http://mymachine:4201
       CT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1pY3Jvc2VydmljZSIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTQifQ.IRCIRm1nfIQTfda_Wb6Pg-341zhV8soAgzw7dd5HxxQ
       API_VERSION: v1
       FASTLY_ENABLED: "false"
