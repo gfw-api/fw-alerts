@@ -69,7 +69,7 @@ describe('Get alerts tests', () => {
         const dateFilter = firstDay.format('YYYY-MM-DD');
 
         nock(process.env.CT_URL)
-            .get('/v1/query/003539d8-b713-4df2-9e31-5eda80353191')
+            .get('/v1/query/7af31612-a88a-4910-9b11-88c355b2f7a4')
             .query({
                 sql: `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`,
                 geostore: 'ddc18d3a0692eea844f687c6d0fd3002'
@@ -95,10 +95,10 @@ describe('Get alerts tests', () => {
                 meta: {
                     cloneUrl: {
                         http_method: 'POST',
-                        url: '/dataset/003539d8-b713-4df2-9e31-5eda80353191/clone',
+                        url: '/dataset/7af31612-a88a-4910-9b11-88c355b2f7a4/clone',
                         body: {
                             dataset: {
-                                datasetUrl: '/query/003539d8-b713-4df2-9e31-5eda80353191?sql=select%20latitude%2C%20longitude%2C%20acq_date%20from%20vnp14imgtdl_nrt_global_7d%20where%20acq_date%20%3E%20%272020-03-15%27&geostore=ddc18d3a0692eea844f687c6d0fd3002',
+                                datasetUrl: '/query/7af31612-a88a-4910-9b11-88c355b2f7a4?sql=select%20latitude%2C%20longitude%2C%20acq_date%20from%20vnp14imgtdl_nrt_global_7d%20where%20acq_date%20%3E%20%272020-03-15%27&geostore=ddc18d3a0692eea844f687c6d0fd3002',
                                 application: [
                                     'your',
                                     'apps'
