@@ -74,8 +74,9 @@ describe('Get alerts tests', () => {
         })
             .get(`/dataset/${config.get('viirsDataset')}/latest/query`)
             .query({
-                sql: `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`,
-                geostore_id: 'ddc18d3a0692eea844f687c6d0fd3002'
+                sql: `select latitude, longitude, alert__date from data where alert__date > '${dateFilter}'`,
+                geostore_id: 'ddc18d3a0692eea844f687c6d0fd3002',
+                geostore_origin: 'rw'
             })
             .reply(200, {
                 data: [
@@ -95,21 +96,7 @@ describe('Get alerts tests', () => {
                         alert__date: '2020-03-16T00:00:00Z'
                     }
                 ],
-                meta: {
-                    cloneUrl: {
-                        http_method: 'POST',
-                        url: '/dataset/7af31612-a88a-4910-9b11-88c355b2f7a4/clone',
-                        body: {
-                            dataset: {
-                                datasetUrl: '/query/7af31612-a88a-4910-9b11-88c355b2f7a4?sql=select%20latitude%2C%20longitude%2C%20acq_date%20from%20vnp14imgtdl_nrt_global_7d%20where%20acq_date%20%3E%20%272020-03-15%27&geostore=ddc18d3a0692eea844f687c6d0fd3002',
-                                application: [
-                                    'your',
-                                    'apps'
-                                ]
-                            }
-                        }
-                    }
-                }
+                status: 'success'
             });
 
         const response = await requester.get(`/api/v1/fw-alerts/viirsDatasetSlug/ddc18d3a0692eea844f687c6d0fd3002`);
