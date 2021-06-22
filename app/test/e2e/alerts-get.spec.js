@@ -1,9 +1,7 @@
 /* eslint-disable max-len */
 const nock = require('nock');
 const chai = require('chai');
-const config = require('config');
 const moment = require('moment');
-const logger = require('logger');
 
 const { getTestServer } = require('./utils/test-server');
 
@@ -29,7 +27,7 @@ describe('Get alerts tests', () => {
     it('Get alerts for the glad dataset should return a 200 response (happy case)', async () => {
         const firstDay = moment().subtract(365, 'days');
 
-        nock(process.env.CT_URL)
+        nock(process.env.GATEWAY_URL)
             .get('/v1/glad-alerts/download')
             .query({
                 period: `${firstDay.format('YYYY-MM-DD')},${moment().format('YYYY-MM-DD')}`,
@@ -68,7 +66,7 @@ describe('Get alerts tests', () => {
         const firstDay = moment().subtract(7, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
 
-        nock(process.env.CT_URL)
+        nock(process.env.GATEWAY_URL)
             .get('/v1/query/7af31612-a88a-4910-9b11-88c355b2f7a4')
             .query({
                 sql: `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`,

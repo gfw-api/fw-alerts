@@ -53,7 +53,7 @@ class AreaService {
         const dateFilter = firstDay.format('YYYY-MM-DD');
         const query = `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`;
 
-        const uri = `/query/${viirsDataset}?sql=${query}&geostore=${geostore}`;
+        const uri = `/v1/query/${viirsDataset}?sql=${query}&geostore=${geostore}`;
         logger.info(`Requesting viirs alerts with query ${uri}`);
         try {
             const result = await RWAPIMicroservice.requestToMicroservice({
@@ -74,7 +74,7 @@ class AreaService {
         const firstDay = moment().subtract(range, 'days');
         const period = `${firstDay.format('YYYY-MM-DD')},${moment().format('YYYY-MM-DD')}`;
 
-        const uri = `/glad-alerts/download?period=${period}&geostore=${geostore}&format=json`;
+        const uri = `/v1/glad-alerts/download?period=${period}&geostore=${geostore}&format=json`;
 
         logger.info(`Requesting glad alerts with query ${uri}`);
         try {

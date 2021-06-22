@@ -41,27 +41,15 @@ spec:
               value: staging
             - name: NODE_PATH
               value: app/src
-            - name: LOCAL_URL
-              value: http://fw-alerts.fw.svc.cluster.local:4200
-            - name: CT_URL
+            - name: GATEWAY_URL
               valueFrom:
                 secretKeyRef:
-                  key: CT_URL
+                  key: GATEWAY_URL
                   name: mssecrets
-            - name: CT_TOKEN
+            - name: MICROSERVICE_TOKEN
               valueFrom:
                 secretKeyRef:
-                  key: CT_TOKEN
-                  name: mssecrets
-            - name: CT_REGISTER_MODE
-              valueFrom:
-                secretKeyRef:
-                  key: CT_REGISTER_MODE
-                  name: mssecrets
-            - name: API_VERSION
-              valueFrom:
-                secretKeyRef:
-                  key: API_VERSION
+                  key: MICROSERVICE_TOKEN
                   name: mssecrets
             - name: VIIRS_DATASET
               value: 9223ef23-7329-4987-8720-b5a87305f57d
