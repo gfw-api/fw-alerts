@@ -9,10 +9,7 @@ services:
       PORT: 4200
       NODE_PATH: app/src
       NODE_ENV: test
-      CT_URL: http://mymachine:9000
-      API_VERSION: v1
-      CT_REGISTER_MODE: auto
-      CT_TOKEN: ctToken
-      LOCAL_URL: http://mymachine:4200
+      GATEWAY_URL: http://mymachine:9000
+      MICROSERVICE_TOKEN: ctToken
       FASTLY_ENABLED: "false"
     command: test
