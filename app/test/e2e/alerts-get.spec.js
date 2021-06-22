@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 const nock = require('nock');
 const chai = require('chai');
+const config = require('config');
 const moment = require('moment');
 
 const { getTestServer } = require('./utils/test-server');
@@ -66,11 +67,15 @@ describe('Get alerts tests', () => {
         const firstDay = moment().subtract(7, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
 
-        nock(process.env.GATEWAY_URL)
-            .get('/v1/query/7af31612-a88a-4910-9b11-88c355b2f7a4')
+        nock(config.get('gfwDataApi.url'), {
+            reqheaders: {
+                'x-api-key': config.get('gfwDataApi.apiKey')
+            }
+        })
+            .get(`/dataset/${config.get('viirsDataset')}/latest/query`)
             .query({
                 sql: `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`,
-                geostore: 'ddc18d3a0692eea844f687c6d0fd3002'
+                geostore_id: 'ddc18d3a0692eea844f687c6d0fd3002'
             })
             .reply(200, {
                 data: [
