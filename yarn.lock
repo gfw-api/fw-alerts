@@ -1704,7 +1704,6 @@ fast-levenshtein@~2.0.6:
 
 fastly-promises@tiagojsag/fastly-promises#master:
   version "0.0.0-semantically-released"
-  uid "14470364f0d4e62b8ff99c8f7e7dd7cb27039242"
   resolved "https://codeload.github.com/tiagojsag/fastly-promises/tar.gz/14470364f0d4e62b8ff99c8f7e7dd7cb27039242"
   dependencies:
     axios "0.21.1"
@@ -4521,10 +4520,10 @@ run-async@^2.4.0:
   dependencies:
     is-promise "^2.1.0"
 
-rw-api-microservice-node@^3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/rw-api-microservice-node/-/rw-api-microservice-node-3.4.1.tgz#01b2876d2b2acc13aaf01d630784e10b7410e186"
-  integrity sha512-blxLH1IXYudV+fMzuXFDPqkQyfqgWg2XDhjpDwRBdxW6PRW8ztOh7IKhVHov/RWeonrVQI6OzLnYEWsv3CBw0Q==
+rw-api-microservice-node@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/rw-api-microservice-node/-/rw-api-microservice-node-4.0.0.tgz#ef7f54b788da94f98c7c25358dcdc6c41c8cf571"
+  integrity sha512-CoKEJ8HQEnrwXHSTfzG9PFMVSGPiSlY3Y5cnz1k3rmPmybtwtIRr/R0uEYA0JVswYuAu57iH1eeatI8fcKwdQg==
   dependencies:
     "@koa/cors" "^3.1.0"
     axios "^0.21.1"

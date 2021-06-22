@@ -1,6 +1,10 @@
 {
-    "service": {
-        "port": "PORT"
-    },
-    "viirsDataset": "VIIRS_DATASET"
+  "service": {
+    "port": "PORT"
+  },
+  "viirsDataset": "VIIRS_DATASET",
+  "gfwDataApi": {
+    "url": "GFW_DATA_API__URL",
+    "apiKey": "GFW_DATA_API__API_KEY"
+  }
 }

@@ -2,6 +2,7 @@ const logger = require('logger');
 const { RWAPIMicroservice } = require('rw-api-microservice-node');
 const config = require('config');
 const moment = require('moment');
+const GFWDataAPIService = require('services/gfw-data-api.service');
 
 
 class AreaService {
@@ -51,16 +52,12 @@ class AreaService {
 
         const firstDay = moment().subtract(range, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
-        const query = `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`;
+        const query = `select latitude, longitude, alert__date from data where alert__date > '${dateFilter}'`;
 
-        const uri = `/query/${viirsDataset}?sql=${query}&geostore=${geostore}`;
-        logger.info(`Requesting viirs alerts with query ${uri}`);
+        logger.info(`Requesting viirs alerts with query ${query}`);
         try {
-            const result = await RWAPIMicroservice.requestToMicroservice({
-                uri,
-                method: 'GET',
-                json: true
-            });
+
+            const result = await GFWDataAPIService.queryDataset(viirsDataset, query, geostore);
             logger.info('Got viirs alerts', result);
             return AreaService.parseViirsAlerts(result.data);
         } catch (err) {
@@ -74,7 +71,7 @@ class AreaService {
         const firstDay = moment().subtract(range, 'days');
         const period = `${firstDay.format('YYYY-MM-DD')},${moment().format('YYYY-MM-DD')}`;
 
-        const uri = `/glad-alerts/download?period=${period}&geostore=${geostore}&format=json`;
+        const uri = `/v1/glad-alerts/download?period=${period}&geostore=${geostore}&format=json`;
 
         logger.info(`Requesting glad alerts with query ${uri}`);
         try {

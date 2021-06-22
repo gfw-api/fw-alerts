@@ -3,7 +3,6 @@ const nock = require('nock');
 const chai = require('chai');
 const config = require('config');
 const moment = require('moment');
-const logger = require('logger');
 
 const { getTestServer } = require('./utils/test-server');
 
@@ -29,7 +28,7 @@ describe('Get alerts tests', () => {
     it('Get alerts for the glad dataset should return a 200 response (happy case)', async () => {
         const firstDay = moment().subtract(365, 'days');
 
-        nock(process.env.CT_URL)
+        nock(process.env.GATEWAY_URL)
             .get('/v1/glad-alerts/download')
             .query({
                 period: `${firstDay.format('YYYY-MM-DD')},${moment().format('YYYY-MM-DD')}`,
@@ -68,11 +67,16 @@ describe('Get alerts tests', () => {
         const firstDay = moment().subtract(7, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
 
-        nock(process.env.CT_URL)
-            .get('/v1/query/7af31612-a88a-4910-9b11-88c355b2f7a4')
+        nock(config.get('gfwDataApi.url'), {
+            reqheaders: {
+                'x-api-key': config.get('gfwDataApi.apiKey')
+            }
+        })
+            .get(`/dataset/${config.get('viirsDataset')}/latest/query`)
             .query({
-                sql: `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`,
-                geostore: 'ddc18d3a0692eea844f687c6d0fd3002'
+                sql: `select latitude, longitude, alert__date from data where alert__date > '${dateFilter}'`,
+                geostore_id: 'ddc18d3a0692eea844f687c6d0fd3002',
+                geostore_origin: 'rw'
             })
             .reply(200, {
                 data: [
@@ -92,21 +96,7 @@ describe('Get alerts tests', () => {
                         alert__date: '2020-03-16T00:00:00Z'
                     }
                 ],
-                meta: {
-                    cloneUrl: {
-                        http_method: 'POST',
-                        url: '/dataset/7af31612-a88a-4910-9b11-88c355b2f7a4/clone',
-                        body: {
-                            dataset: {
-                                datasetUrl: '/query/7af31612-a88a-4910-9b11-88c355b2f7a4?sql=select%20latitude%2C%20longitude%2C%20acq_date%20from%20vnp14imgtdl_nrt_global_7d%20where%20acq_date%20%3E%20%272020-03-15%27&geostore=ddc18d3a0692eea844f687c6d0fd3002',
-                                application: [
-                                    'your',
-                                    'apps'
-                                ]
-                            }
-                        }
-                    }
-                }
+                status: 'success'
             });
 
         const response = await requester.get(`/api/v1/fw-alerts/viirsDatasetSlug/ddc18d3a0692eea844f687c6d0fd3002`);

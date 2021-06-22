@@ -1,3 +1,7 @@
+## 22/06/2021
+
+- Update `rw-api-microservice-node` to remove CT support.
+
 ## 31/05/2021
 
 - Update `rw-api-microservice-node` to add CORS support.
@@ -18,3 +22,4 @@
 ## 09/04/2020
 
 - Add node affinity to kubernetes configuration.
+``

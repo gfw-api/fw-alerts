@@ -1,10 +1,14 @@
 {
-    "logger": {
-        "name": "fw-alerts",
-        "level": "debug",
-        "toFile": false,
-        "dirLogFile": null
-    },
-    "gladDatasetSlug": "gladDatasetSlug",
-    "viirsDatasetSlug": "viirsDatasetSlug"
+  "logger": {
+    "name": "fw-alerts",
+    "level": "debug",
+    "toFile": false,
+    "dirLogFile": null
+  },
+  "gladDatasetSlug": "gladDatasetSlug",
+  "viirsDatasetSlug": "viirsDatasetSlug",
+  "gfwDataApi": {
+    "url": "https://data-api.globalforestwatch.org",
+    "apiKey": "abcdef"
+  }
 }
