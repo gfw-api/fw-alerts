@@ -2,6 +2,7 @@ const logger = require('logger');
 const { RWAPIMicroservice } = require('rw-api-microservice-node');
 const config = require('config');
 const moment = require('moment');
+const GFWDataAPIService = require('services/gfw-data-api.service');
 
 
 class AreaService {
@@ -53,14 +54,10 @@ class AreaService {
         const dateFilter = firstDay.format('YYYY-MM-DD');
         const query = `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`;
 
-        const uri = `/v1/query/${viirsDataset}?sql=${query}&geostore=${geostore}`;
-        logger.info(`Requesting viirs alerts with query ${uri}`);
+        logger.info(`Requesting viirs alerts with query ${query}`);
         try {
-            const result = await RWAPIMicroservice.requestToMicroservice({
-                uri,
-                method: 'GET',
-                json: true
-            });
+
+            const result = await GFWDataAPIService.queryDataset(viirsDataset, query, geostore);
             logger.info('Got viirs alerts', result);
             return AreaService.parseViirsAlerts(result.data);
         } catch (err) {

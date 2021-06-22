@@ -45,6 +45,7 @@
     "nyc": "^15.0.0"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "bunyan": "^1.8.5",
     "config": "^3.3.0",
     "rw-api-microservice-node": "^4.0.0",
