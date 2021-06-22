@@ -52,7 +52,7 @@ class AreaService {
 
         const firstDay = moment().subtract(range, 'days');
         const dateFilter = firstDay.format('YYYY-MM-DD');
-        const query = `select latitude, longitude, alert__date from table where alert__date > '${dateFilter}'`;
+        const query = `select latitude, longitude, alert__date from data where alert__date > '${dateFilter}'`;
 
         logger.info(`Requesting viirs alerts with query ${query}`);
         try {

@@ -8,7 +8,9 @@ class GFWDataAPIService {
         const axiosRequestConfig = {
             baseURL: config.get('gfwDataApi.url'),
             method: 'GET',
-            params: {},
+            params: {
+                geostore_origin: 'rw'
+            },
             headers: {}
         };
 
@@ -18,6 +20,8 @@ class GFWDataAPIService {
             const apiKey = config.get('gfwDataApi.apiKey');
             if (apiKey) {
                 axiosRequestConfig.headers['x-api-key'] = apiKey;
+            } else {
+                throw Error('Cannot query the GFW Data API without an API key');
             }
 
             if (geostoreId) {

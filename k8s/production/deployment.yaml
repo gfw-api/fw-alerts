@@ -51,10 +51,11 @@ spec:
                 secretKeyRef:
                   key: MICROSERVICE_TOKEN
                   name: mssecrets
-            - name: VIIRS_DATASET
-              value: 7af31612-a88a-4910-9b11-88c355b2f7a4
-            - name: VIIRS_DATASET_TABLENAME
-              value: vnp14imgtdl_nrt_global_7d
+            - name: GFW_DATA_API__API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: GFW_DATA_API__API_KEY
+                  name: mssecrets
             - name: FASTLY_ENABLED
               valueFrom:
                 secretKeyRef:
