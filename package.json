@@ -59,7 +59,7 @@
     "koa-router": "^7.0.1",
     "koa-simple-healthcheck": "^0.0.1",
     "koa-validate": "^1.0.7",
-    "moment": "2.19.3"
+    "moment": "2.29.2"
   },
   "husky": {
     "hooks": {
